@@ -3,6 +3,7 @@
 use App\Http\Controllers\MovieContoller;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActController;
+use App\Http\Controllers\IndexController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,8 @@ Route::post('/users/login', [UserController::class, 'login']);
 Route::get('/acts', [ActController::class, 'index']);
 Route::get('/acts/{id}', [ActController::class, 'show']);
 Route::get('/acts/search/{name}', [ActController::class, 'search']);
+// index
+Route::get('/index', [IndexController::class, 'index']);
 // resource
 // Route::resource('movies', MovieContoller::class);
 
@@ -43,4 +46,5 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::delete('/movies/{id}', [MovieContoller::class, 'destory']);
     Route::post('/movies/{id}/add-act', [MovieContoller::class, 'addAct']);
     Route::post('/acts/{id}/add-movie', [ActController::class, 'addMovie']);
+    Route::post('/movies/{id}/add-vote', [MovieContoller::class, 'addVote']);
 });

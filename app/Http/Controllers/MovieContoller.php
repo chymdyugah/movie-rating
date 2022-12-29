@@ -7,9 +7,12 @@ use App\Traits\HttpResponses;
 use App\Http\Requests\MovieRequest;
 use App\Models\ActMovie;
 use App\Http\Requests\AddActRequest;
+use App\Http\Requests\AddVoteRequest;
 use App\Http\Resources\MovieResource;
 use App\Models\Act;
+use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MovieContoller extends Controller
 {
@@ -55,6 +58,7 @@ class MovieContoller extends Controller
         if ($movie == null) {
             return $this->fail("Does not exist", [], 404);
         }
+        echo($movie->votes()->sum('rating'));
         $movie = new MovieResource($movie);
         return $this->success($movie);
     }
@@ -122,6 +126,28 @@ class MovieContoller extends Controller
         ActMovie::create([
             'act_id' => $act->id,
             'movie_id' => $movie->id,
+        ]);
+        $movie = new MovieResource($movie);
+        return $this->success($movie);
+    }
+
+    /**
+     * add vote to a specified resource.
+     *
+     * @param  str  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addVote(AddVoteRequest $request, $id)
+    {
+        $movie = Movies::find($id);
+        if ($movie == null) {
+            return $this->fail("Does not exist", [], 404);
+        }
+        $request->validated($request->all());
+        Vote::create([
+            'movie_id' => $movie->id,
+            'user_id' => Auth::user()->id,
+            'rating'=> $request->rating,
         ]);
         $movie = new MovieResource($movie);
         return $this->success($movie);

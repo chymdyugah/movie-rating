@@ -14,4 +14,8 @@ class Movies extends Model
     {
         return $this->belongsToMany(Act::class, 'act_movie', 'movie_id', 'act_id');
     }
+
+    public function votes(){
+        return $this->belongsToMany(User::class, 'votes', 'movie_id', 'user_id');
+    }
 }
